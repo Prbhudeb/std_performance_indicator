@@ -60,3 +60,11 @@ def load_object(file_path):
 
     except Exception as e:
         raise CustomException(e, sys)
+    
+    
+# if __name__ == "__main__":
+#     preprocessor_path = 'artifacts/preprocessor.pkl'
+#     if not os.path.isfile(preprocessor_path):
+#         print(f"File not found: {preprocessor_path}")
+#     else:
+#         print(f"File exists: {preprocessor_path}")
