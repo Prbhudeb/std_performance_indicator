@@ -1,4 +1,4 @@
-from flask import Flask,request,render_template
+from flask import Flask,request,render_template,jsonify
 import numpy as np
 import pandas as pd
 
@@ -15,7 +15,7 @@ app=application
 def index():
     return render_template('index.html') 
 
-@app.route('/predictdata',methods=['GET','POST'])
+@app.route('/predict_data',methods=['GET','POST'])
 def predict_datapoint():
     if request.method=='GET':
         return render_template('home.html')
@@ -39,6 +39,37 @@ def predict_datapoint():
         results=predict_pipeline.predict(pred_df)
         print("after Prediction")
         return render_template('home.html',results=results[0])
+    
+@app.route('/api/predict_data', methods = ['POST'])
+def api_predict_datapoint():
+    try:
+        # Parse incoming JSON request
+        data_json = request.get_json()
+
+        # Use the CustomData class to handle the incoming data
+        data = CustomData(
+            gender=data_json['gender'],
+            race_ethnicity=data_json['ethnicity'],
+            parental_level_of_education=data_json['parental_level_of_education'],
+            lunch=data_json['lunch'],
+            test_preparation_course=data_json['test_preparation_course'],
+            reading_score=float(data_json['reading_score']),
+            writing_score=float(data_json['writing_score'])
+        )
+        
+        # Convert the input data to DataFrame
+        pred_df = data.get_data_as_data_frame()
+
+        # Call the prediction pipeline
+        predict_pipeline = PredictPipeline()
+        results = predict_pipeline.predict(pred_df)
+
+        # Return results as JSON response
+        return jsonify({'prediction': results[0]})
+
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
     
 
 if __name__=="__main__":
