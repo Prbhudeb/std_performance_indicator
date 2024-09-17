@@ -43,7 +43,7 @@ def predict_datapoint():
 @app.route('/api/predict_data', methods = ['POST'])
 def api_predict_datapoint():
     try:
-        # Parse incoming JSON request
+        # Parse incoming JSON request  
         data_json = request.get_json()
 
         # Use the CustomData class to handle the incoming data
